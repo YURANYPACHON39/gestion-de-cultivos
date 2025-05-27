@@ -1,0 +1,547 @@
+/* Establece box-sizing en border-box para html */
+html {
+  box-sizing: border-box;
+}
+/* Aplica box-sizing heredado a todos los elementos y pseudoelementos */
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+/* Resetea margin y padding, y define fuente global */
+* {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ========== Cuerpo de la pantalla ========== */
+/* Estilo base del body: color de fondo, texto y layout flex vertical */
+body {
+  background-color: #f3e8f8;
+  color: #3a1a5f;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+/* Estilo alternativo para body cuando tiene clase logged-in */
+body.logged-in {
+  background-color: #fafafa;
+  height: auto;
+}
+
+/* ========== HEADER ========== */
+/* Oculta header cuando body no tiene clase logged-in */
+body:not(.logged-in) header {
+  display: none;
+}
+/* Estilo general para header: altura, color, flex y posición fija */
+header {
+  height: 80px;
+  background-color: #5e2a7e;
+  color: white;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(58, 26, 95, 0.3);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+/* Contenedor del logo y título en header con flex y separación */
+.logo-titulo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+/* Imagen del logo con tamaño fijo y ajuste */
+.logo-titulo img {
+  height: 80px;
+  width: 80px;
+  object-fit: contain;
+}
+/* Título principal con tamaño de fuente */
+.logo-titulo h1 {
+  font-size: 1.8rem;
+}
+/* Subtítulo con tamaño pequeño y color específico */
+.logo-titulo p {
+  font-size: 0.9rem;
+  color: #bfa2d9;
+  margin-top: 4px;
+}
+/* Añade padding superior al main contenido cuando el usuario está logueado */
+body.logged-in main#contenido {
+  padding-top: 100px;
+}
+
+/* ========== MENÚ LATERAL ========== */
+/* Contenedor del menú lateral con tamaño, color y posición fija */
+nav#menuLateral {
+  width: 220px;
+  background-color: #5e2a7e;
+  color: white;
+  padding-top: 20px;
+  position: fixed;
+  top: 80px;
+  left: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+/* Lista sin estilos de lista */
+nav#menuLateral ul {
+  list-style: none;
+}
+/* Espacio inferior entre items de menú */
+nav#menuLateral ul li {
+  margin-bottom: 10px;
+}
+/* Enlaces de menú con padding, color, sin subrayado, borde y cursor */
+nav#menuLateral ul li a {
+  display: block;
+  padding: 12px 20px;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  border-left: 5px solid transparent;
+  cursor: pointer;
+}
+/* Color de fondo al pasar el cursor */
+nav#menuLateral ul li a:hover {
+  background-color: #6f42c1;
+}
+/* Estilo para enlace activo: color y borde izquierdo */
+nav#menuLateral ul li a.activo {
+  background-color: #8e54e9;
+  border-left-color: #c5b3f2;
+}
+/* Botón de logout con margen, padding, color y estilo de botón */
+#btnLogout {
+  margin: 20px;
+  padding: 10px 15px;
+  background-color: #fafafa;
+  border: none;
+  border-radius: 5px;
+  color: #6f42c1;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+/* Cambio de fondo en hover para botón logout */
+#btnLogout:hover {
+  background-color: #ffffff;
+}
+
+/* ========== CONTENIDO PRINCIPAL ========== */
+/* Área principal con margen izquierdo para espacio del menú lateral */
+main#contenido {
+  margin-left: 220px;
+  padding: 40px;
+  flex-grow: 1;
+  background-color: white;
+  min-height: 80vh;
+  overflow-y: auto;
+}
+/* Paneles ocultos por defecto */
+main#contenido .panel {
+  display: none;
+}
+/* Panel activo se muestra */
+main#contenido .panel.activo {
+  display: block;
+}
+/* Estilo para títulos h2 */
+h2 {
+  margin-bottom: 20px;
+  color: #5e2a7e;
+}
+
+/* ========== INDICADORES ========== */
+/* Contenedor flex para indicadores con separación y wrap */
+.indicadores {
+  display: flex;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+/* Estilo de cada indicador: fondo, borde, padding y sombra */
+.indicador {
+  background-color: #ede7f6;
+  border: 1px solid #b39ddb;
+  border-radius: 8px;
+  padding: 20px 30px;
+  flex: 1 1 200px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(94, 42, 126, 0.1);
+}
+/* Título pequeño dentro de indicador */
+.indicador h3 {
+  margin-bottom: 12px;
+  color: #7e57c2;
+}
+/* Texto grande y destacado dentro de indicador */
+.indicador p {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #5e2a7e;
+}
+
+/* ========== FORMULARIOS (Cultivo, Planificación, Reportes) ========== */
+/* Estilo común para formularios y sección reportes */
+form#formCultivo,
+form#formPlanificacion,
+#reportes {
+  margin-bottom: 30px;
+  background-color: #f5ecff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(94, 42, 126, 0.15);
+  box-sizing: border-box;
+}
+/* Divisiones internas con margen inferior */
+form#formCultivo div,
+form#formPlanificacion div,
+#reportes form div {
+  margin-bottom: 15px;
+}
+/* Etiquetas con bloque, margen y peso de fuente */
+form#formCultivo label,
+form#formPlanificacion label,
+#reportes label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #5e2a7e;
+}
+/* Inputs y textarea estilos básicos, ancho completo y borde */
+form#formCultivo input[type="text"],
+form#formPlanificacion input[type="text"],
+#reportes input[type="text"],
+form#formCultivo input[type="date"],
+form#formPlanificacion input[type="date"],
+#reportes input[type="date"],
+form#formCultivo textarea,
+form#formPlanificacion textarea,
+#reportes textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #b39ddb;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+}
+/* Textareas con altura mínima */
+form#formCultivo textarea,
+form#formPlanificacion textarea,
+#reportes textarea {
+  min-height: 70px;
+}
+/* Botones con fondo morado, texto blanco, padding y cursor */
+form#formCultivo button,
+form#formPlanificacion button,
+#reportes button {
+  background-color: #7e57c2;
+  color: white;
+  padding: 12px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+/* Cambia color de fondo en hover para botones */
+form#formCultivo button:hover,
+form#formPlanificacion button:hover,
+#reportes button:hover {
+  background-color: #5e2a7e;
+}
+
+/* ========== LISTA DE CULTIVOS ========== */
+/* Contenedor de lista con ancho máximo, borde superior y padding */
+#listaCultivos {
+  max-width: 800px;
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+  color: #555;
+  font-size: 1rem;
+}
+
+/* ========== LOGIN ========== */
+body:not(.logged-in) {
+  display: flex; /* usa flexbox para centrar contenido */
+  justify-content: center; /* centra horizontalmente */
+  align-items: center; /* centra verticalmente */
+  height: 100vh; /* altura total de la ventana */
+  width: 100vw; /* ancho total de la ventana */
+  background: 
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), /* capa negra semi-transparente */
+    url('descargas/hermosas-plantas-de-lavanda-purpura-y-camino.jpg') no-repeat center center fixed; /* imagen de fondo */
+  background-size: cover; /* imagen cubre todo el fondo */
+}
+
+section#login {
+  background: #ede7f6; /* tono lila muy suave */
+  padding: 2.5rem 3rem; /* espacio interior arriba-abajo y izquierda-derecha */
+  border-radius: 12px; /* bordes redondeados */
+  box-shadow: 0 4px 15px rgba(94, 42, 126, 0.3); /* sombra sutil */
+  width: 350px; /* ancho fijo */
+  max-width: 90vw; /* máximo ancho en pantallas pequeñas */
+  box-sizing: border-box; /* incluye padding y border en el ancho */
+  color: #5e2a7e; /* color de texto */
+}
+section#login h2 {
+  margin-bottom: 1.5rem; /* espacio abajo */
+  text-align: center; /* texto centrado */
+  color: #5e2a7e; /* color del texto */
+  font-weight: 700; /* texto en negrita */
+  text-shadow: 0 0 3px #8e54e9aa; /* sombra difusa */
+}
+section#login form div {
+  margin-bottom: 1rem; /* espacio entre bloques del formulario */
+}
+section#login label {
+  display: block; /* etiqueta ocupa línea completa */
+  margin-bottom: 0.4rem; /* espacio debajo */
+  font-weight: 600; /* texto semi-negrita */
+  color: #7e57c2; /* color del texto */
+}
+section#login input[type="email"],
+section#login input[type="password"] {
+  width: 100%; /* ancho completo */
+  padding: 0.7rem; /* espacio interior */
+  border: 1.5px solid #7e57c2; /* borde lila */
+  border-radius: 8px; /* bordes redondeados */
+  font-size: 1rem; /* tamaño de letra */
+  transition: border-color 0.3s ease; /* transición suave al cambiar borde */
+  font-family: inherit; /* hereda la fuente */
+  color: #5e2a7e; /* color del texto */
+  background-color: #faf7ff; /* fondo claro */
+}
+section#login input:focus {
+  border-color: #5e2a7e; /* cambia color del borde al enfocar */
+  outline: none; /* elimina outline por defecto */
+  background-color: #f3e8f8; /* fondo ligeramente diferente */
+}
+section#login button[type="submit"] {
+  width: 100%; /* ancho completo */
+  padding: 0.8rem; /* espacio interior */
+  background-color: #5e2a7e; /* fondo lila oscuro */
+  border: none; /* sin borde */
+  border-radius: 8px; /* bordes redondeados */
+  color: white; /* texto blanco */
+  font-size: 1.1rem; /* tamaño de letra */
+  font-weight: 700; /* negrita */
+  cursor: pointer; /* cursor puntero */
+  transition: background-color 0.3s ease; /* transición suave */
+  margin-top: 0.8rem; /* margen superior */
+  box-shadow: 0 4px 8px rgba(94, 42, 126, 0.4); /* sombra */
+}
+section#login button[type="submit"]:hover {
+  background-color: #8e54e9; /* cambia el color de fondo al pasar el mouse */
+}
+
+
+/* ========== TABLAS (Planificación / Reportes) ========== */
+section.panel table {
+  width: 100%; /* tabla ocupa todo el ancho */
+  border-collapse: collapse; /* quita espacio entre bordes */
+  margin-top: 20px; /* margen arriba */
+  background-color: #fdf6ff; /* fondo blanco con tinte lila */
+  border-radius: 8px; /* bordes redondeados */
+  overflow: hidden; /* para que no se salga el contenido redondeado */
+  box-shadow: 0 2px 8px rgba(94, 42, 126, 0.1); /* sombra suave */
+}
+section.panel table th,
+section.panel table td {
+  padding: 12px 16px; /* espacio interior de celdas */
+  text-align: left; /* texto alineado a la izquierda */
+  border-bottom: 1px solid #ddd; /* línea inferior clara */
+}
+section.panel table th {
+  background-color: #d1b3ff; /* fondo morado claro para encabezados */
+  color: #3a1a5f; /* texto oscuro */
+}
+section.panel table tr:nth-child(even) {
+  background-color: #f7f1ff; /* color de fondo para filas pares */
+}
+section.panel table tr:hover {
+  background-color: #ece1fb; /* color al pasar el mouse */
+}
+
+/* ========== LISTA REPORTES ========= */
+#reportes ul {
+  width: 100%; /* ancho completo */
+  background-color: #fdf6ff; /* fondo blanco con tinte lila */
+  border-radius: 10px; /* bordes redondeados */
+  box-shadow: 0 2px 8px rgba(94, 42, 126, 0.1); /* sombra suave */
+  padding: 15px 20px; /* espacio interno */
+  list-style-type: disc; /* estilo de lista con viñetas */
+  color: #5e2a7e; /* color del texto */
+  font-size: 1rem; /* tamaño del texto */
+  max-height: 250px; /* altura máxima para que aparezca scroll */
+  overflow-y: auto; /* scroll vertical si es necesario */
+  margin-top: 20px; /* margen arriba */
+  box-sizing: border-box; /* incluye padding en el ancho */
+}
+#reportes ul li {
+  margin-bottom: 8px; /* espacio entre items */
+  border-bottom: 1px solid #ddd; /* línea inferior */
+  padding-bottom: 8px; /* espacio debajo */
+}
+#reportes ul li:last-child {
+  border-bottom: none; /* elimina borde en el último item */
+}
+#reportes ul::-webkit-scrollbar {
+  width: 8px; /* ancho de la barra de scroll */
+}
+#reportes ul::-webkit-scrollbar-track {
+  background: #f0eaff; /* fondo de la pista */
+  border-radius: 6px; /* bordes redondeados */
+}
+#reportes ul::-webkit-scrollbar-thumb {
+  background-color: #7e57c2; /* color del pulgar (barra que se mueve) */
+  border-radius: 6px; /* bordes redondeados */
+  border: 2px solid #f0eaff; /* borde alrededor del pulgar */
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1000px) {
+  nav#menuLateral {
+    position: relative; /* posición normal */
+    width: 100%; /* ancho completo */
+    height: auto; /* altura automática */
+    top: 0; /* posición arriba */
+    display: flex; /* flexbox para menú */
+    justify-content: center; /* centra horizontalmente */
+    overflow-y: visible; /* asegura que el overflow vertical sea visible */
+  }
+  nav#menuLateral ul {
+    display: flex; /* lista en fila */
+    gap: 10px; /* separación entre ítems */
+  }
+  nav#menuLateral ul li {
+    margin-bottom: 0; /* elimina margen inferior en ítems */
+  }
+  main#contenido {
+    margin-left: 0; /* elimina margen izquierdo */
+    padding: 20px; /* espacio interno */
+  }
+}
+/* === INSUMOS  === */
+#insumos {
+  background-color: #f4effa; /* Fondo lavanda claro */
+  padding: 2rem; /* Espaciado interno alrededor del contenido */
+  min-height: 100vh; /* Altura mínima igual a la altura de la ventana */
+  box-sizing: border-box; /* Incluye padding y border en el cálculo del ancho/alto */
+  border-radius: 12px; /* Bordes redondeados del contenedor */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Sombra suave para darle profundidad */
+}
+
+/* Contenedor flex para título y formulario lado a lado */
+#insumos .contenedor-titulo-formulario {
+  display: flex; /* Usamos flexbox para colocar elementos en fila */
+  gap: 2rem; /* Espacio entre el título y el formulario */
+  max-width: 900px; /* Ancho máximo del contenedor */
+  margin: 0 auto 2rem auto; /* Centrado horizontal con margen inferior */
+  align-items: flex-start; /* Alinea los elementos al inicio verticalmente */
+}
+
+/* Ajustes para el título dentro del contenedor flex */
+#insumos .contenedor-titulo-formulario h2 {
+  flex: 0 0 250px; /* El título ocupa un ancho fijo de 250px sin crecer ni encoger */
+  margin-bottom: 0; /* Sin margen inferior para ajustarse al contenedor */
+  text-align: left; /* Alineación de texto a la izquierda */
+  color: #4a1f66; /* Color morado oscuro para el texto */
+  font-size: 1.8rem; /* Tamaño de fuente grande para el título */
+}
+
+/* Ajustes para el formulario dentro del contenedor flex */
+#insumos .contenedor-titulo-formulario form {
+  flex-grow: 1; /* El formulario ocupa el espacio restante */
+  max-width: none; /* Sin restricción de ancho máximo */
+  margin: 0; /* Sin margen extra */
+  background-color: #fff; /* Fondo blanco para destacar */
+  padding: 1.5rem; /* Espaciado interno para el formulario */
+  border-radius: 10px; /* Bordes redondeados */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); /* Sombra ligera para dar profundidad */
+}
+
+/* El resto del CSS para #insumos form y sus elementos queda igual */
+#insumos form > div {
+  margin-bottom: 1.2rem; /* Separación entre grupos de campos del formulario */
+}
+
+#insumos label {
+  font-weight: bold; /* Etiquetas en negrita */
+  color: #333; /* Color de texto gris oscuro */
+  display: block; /* Que ocupen toda la línea */
+  margin-bottom: 0.4rem; /* Espacio debajo de la etiqueta */
+}
+
+#insumos input,
+#insumos select {
+  width: 100%; /* Ancho completo dentro del contenedor */
+  padding: 10px; /* Espaciado interno para comodidad al escribir */
+  font-size: 1rem; /* Tamaño de fuente legible */
+  border: 1px solid #ccc; /* Borde gris claro */
+  border-radius: 6px; /* Bordes ligeramente redondeados */
+  box-sizing: border-box; /* Incluye padding y borde en ancho total */
+}
+
+#insumos input:focus,
+#insumos select:focus {
+  border-color: #5e2a7e; /* Cambia el borde a morado cuando está enfocado */
+  outline: none; /* Elimina el contorno por defecto del navegador */
+}
+
+#insumos button[type="submit"] {
+  background-color: #5e2a7e; /* Fondo morado */
+  color: white; /* Texto blanco */
+  padding: 10px 20px; /* Espaciado interno horizontal y vertical */
+  font-size: 1rem; /* Tamaño de fuente */
+  border: none; /* Sin borde */
+  border-radius: 6px; /* Bordes redondeados */
+  cursor: pointer; /* Cambia cursor a mano al pasar sobre el botón */
+  transition: background-color 0.3s ease; /* Transición suave para cambio de color */
+}
+
+#insumos button[type="submit"]:hover {
+  background-color: #4a1f66; /* Color más oscuro al pasar el mouse */
+}
+
+/* Tabla de historial */
+#insumos table {
+  width: 100%; /* Ancho completo */
+  border-collapse: collapse; /* Elimina espacios entre celdas */
+  background-color: #fff; /* Fondo blanco para la tabla */
+  border-radius: 10px; /* Bordes redondeados */
+  overflow: hidden; /* Oculta cualquier contenido que sobresalga */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06); /* Sombra ligera */
+  max-width: 1000px; /* Ancho máximo para no crecer demasiado */
+  margin: 0 auto; /* Centrado horizontal */
+}
+
+#insumos th {
+  background-color: #e7d9f4; /* Fondo morado claro para encabezados */
+  color: #4a1f66; /* Texto morado oscuro */
+  font-weight: bold; /* Texto en negrita */
+  padding: 0.8rem; /* Espaciado interno */
+  text-align: left; /* Texto alineado a la izquierda */
+  font-size: 1rem; /* Tamaño de fuente */
+}
+
+#insumos td {
+  padding: 0.75rem; /* Espaciado interno */
+  font-size: 0.95rem; /* Tamaño de fuente un poco más pequeño */
+  border-top: 1px solid #eee; /* Línea divisoria ligera arriba */
+}
+
+#insumos tr:nth-child(even) {
+  background-color: #faf8fc; /* Filas pares con fondo lavanda muy claro para contraste */
+}
+
+/* ========== UTILITARIAS ========== */
+.oculto {
+  display: none; /* oculta el elemento */
+}

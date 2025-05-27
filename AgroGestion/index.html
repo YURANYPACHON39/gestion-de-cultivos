@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" /> <!-- Codificación de caracteres UTF-8 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" /> <!-- Vista adaptable a dispositivos móviles -->
+  <title>AgroGestión</title> <!-- Título de la pestaña del navegador -->
+  <link rel="stylesheet" href="Estilo.css" /> <!-- Archivo CSS para estilos -->
+  <link rel="icon" href="2.png" /> <!-- Ícono de la página -->
+
+  <!-- Librería Chart.js para gráficos dinámicos -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Librería jsPDF para exportar contenido a PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Librería EmailJS para enviar correos desde JavaScript -->
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script>
+    (function() {
+      emailjs.init("tu_public_key"); // Inicializa EmailJS con tu clave pública
+    })();
+  </script>
+</head>
+<body>
+
+  <!-- Contenedor para mostrar mensajes o alertas, inicialmente oculto -->
+  <div id="alerta" class="alerta oculto"></div>
+
+  <header>
+    <div class="logo-titulo">
+      <img src="2.png" alt="Logo AgroGestión" /> <!-- Logo -->
+      <div>
+        <h1>AgroGestión</h1> <!-- Nombre del sistema -->
+        <p>Bienvenido al sistema inteligente de administración de cultivos</p> <!-- Descripción -->
+      </div>
+    </div>
+  </header>
+
+  <!-- Sección de inicio de sesión, visible inicialmente -->
+  <section id="login" class="panel principal activo">
+    <h2>Iniciar Sesión</h2>
+    <form id="formLogin">
+      <div>
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="email" name="email" required /> <!-- Input para email, obligatorio -->
+      </div>
+      <div>
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" required /> <!-- Input para contraseña, obligatorio -->
+      </div>
+      <button type="submit">Ingresar</button> <!-- Botón para enviar el formulario -->
+    </form>
+  </section>
+
+  <!-- Menú lateral, oculto hasta que el usuario inicie sesión -->
+  <nav id="menuLateral" class="oculto">
+    <ul>
+      <!-- Enlaces para cambiar entre paneles, con función para mostrar panel correspondiente -->
+      <li><a href="#" onclick="mostrarPanel('dashboard', event)" class="activo">Panel Principal</a></li>
+      <li><a href="#" onclick="mostrarPanel('cultivos', event)">Registro de Cultivos</a></li>
+      <li><a href="#" onclick="mostrarPanel('planificacion', event)">Planificación</a></li>
+      <li><a href="#" onclick="mostrarPanel('reportes', event)">Reportes</a></li>
+      <li><a href="#" onclick="mostrarPanel('insumos', event)">Gestión de Insumos</a></li>
+
+      
+    </ul>
+    <button id="btnLogout">Cerrar sesión</button> <!-- Botón para cerrar sesión -->
+  </nav>
+
+  <!-- Contenido principal, oculto hasta el inicio de sesión -->
+  <main id="contenido" class="oculto">
+    <!-- Panel principal con indicadores básicos -->
+    <section id="dashboard" class="panel principal activo">
+      <h2>Panel Principal</h2>
+      <div class="indicadores">
+        <div class="indicador">
+          <h3>Total Cultivos</h3>
+          <p id="totalCultivos">0</p> <!-- Muestra el total de cultivos registrados -->
+        </div>
+        <div class="indicador">
+          <h3>Próxima Cosecha</h3>
+          <p id="proximaCosecha">-</p> <!-- Muestra la próxima fecha estimada de cosecha -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección para registrar cultivos nuevos -->
+    <section id="cultivos" class="panel">
+      <h2>Registro de Cultivos</h2>
+      <form id="formCultivo">
+        <div>
+          <label for="nombreCultivo">Nombre del cultivo:</label>
+          <input type="text" id="nombreCultivo" name="nombreCultivo" required /> <!-- Nombre del cultivo -->
+        </div>
+        <div>
+          <label for="fechaSiembra">Fecha de siembra:</label>
+          <input type="date" id="fechaSiembra" name="fechaSiembra" required /> <!-- Fecha de siembra -->
+        </div>
+        <div>
+          <label for="tipoPlanta">Tipo de planta:</label>
+          <input type="text" id="tipoPlanta" name="tipoPlanta" required /> <!-- Tipo de planta -->
+        </div>
+        <div>
+          <label for="tratamientos">Tratamientos aplicados:</label>
+          <textarea id="tratamientos" name="tratamientos" rows="3"></textarea> <!-- Tratamientos realizados -->
+        </div>
+        <div>
+          <label for="fechaCosecha">Fecha de cosecha (estimada):</label>
+          <input type="date" id="fechaCosecha" name="fechaCosecha" /> <!-- Fecha estimada para cosecha -->
+        </div>
+        <button type="submit">Registrar cultivo</button> <!-- Botón para guardar el cultivo -->
+      </form>
+      <hr />
+      <div id="listaCultivos"></div> <!-- Lista donde se mostrarán los cultivos registrados -->
+    </section>
+
+    <!-- Sección para planificar actividades relacionadas con los cultivos -->
+    <section id="planificacion" class="panel">
+      <h2>Planificación de Actividades</h2>
+      <form id="formPlanificacion">
+        <div>
+          <label for="actividad">Actividad:</label>
+          <input type="text" id="actividad" name="actividad" required /> <!-- Descripción de la actividad -->
+        </div>
+        <div>
+          <label for="fechaActividad">Fecha:</label>
+          <input type="date" id="fechaActividad" name="fecha" required /> <!-- Fecha para la actividad -->
+        </div>
+
+        <!-- Campos ocultos necesarios para enviar correo con EmailJS -->
+        <input type="hidden" id="cultivoRelacionado" name="cultivo" value="zanahoria" />
+        <input type="hidden" id="correoDestino" name="para_email" value="destinatario@ejemplo.com" />
+
+        <!-- Mensaje de confirmación visible tras enviar correo -->
+        <p id="mensajeConfirmacion" style="color: green; display: none;">✅ Correo enviado exitosamente</p>
+
+        <button type="submit">Agregar actividad</button> <!-- Botón para agregar la actividad -->
+      </form>
+      <hr />
+      <div id="listaActividades"></div> <!-- Lista donde se mostrarán las actividades -->
+    </section>
+
+    <!-- Sección para generar reportes y análisis de datos -->
+    <section id="reportes" class="panel">
+      <h2>Reportes y Análisis</h2>
+      <form id="formReporteFiltro">
+        <div>
+          <label for="filtroTipo">Filtrar por tipo de cultivo:</label>
+          <input type="text" id="filtroTipo" name="filtroTipo" placeholder="Ejemplo: zanahoria" /> <!-- Filtro para cultivos -->
+        </div>
+        <button type="submit">Aplicar filtro</button> <!-- Botón para aplicar el filtro -->
+      </form>
+
+      <div>
+        <h3>Conteo de cultivos por tipo:</h3>
+        <ul id="reporteCultivos"></ul> <!-- Lista con conteo de cultivos filtrados -->
+      </div>
+      <div>
+        <h3>Actividades planificadas:</h3>
+        <ul id="reporteActividades"></ul> <!-- Lista con actividades planificadas -->
+      </div>
+
+      <div>
+        <h3>Gráfico de distribución:</h3>
+        <canvas id="graficoCultivos" width="600" height="300"></canvas> <!-- Gráfico generado con Chart.js -->
+        <p id="mensajeSinDatos" style="color: #999; text-align: center; margin-top: 15px; display: none;">
+          No hay datos suficientes para generar un gráfico.
+        </p> <!-- Mensaje cuando no hay datos -->
+      </div>
+
+      <div style="margin-top: 20px;">
+        <button id="btnExportarPDF" disabled>📝 Exportar gráfico a PDF</button> <!-- Botón para exportar el gráfico a PDF, inicialmente deshabilitado -->
+      </div>
+    </section>
+
+    <!-- Sección para registrar y visualizar insumos -->
+<section id="insumos" class="panel">
+  <h2>Gestión de Insumos</h2>
+
+  <form id="formInsumo">
+    <div>
+      <label for="nombreInsumo">Nombre del insumo:</label>
+      <input type="text" id="nombreInsumo" name="nombreInsumo" required />
+    </div>
+    <div>
+      <label for="tipoInsumo">Tipo:</label>
+      <select id="tipoInsumo" name="tipoInsumo" required>
+        <option value="">Seleccione</option>
+        <option value="Agua">Agua</option>
+        <option value="Fertilizante">Fertilizante</option>
+        <option value="Pesticida">Pesticida</option>
+        <option value="Otro">Otro</option>
+      </select>
+    </div>
+    <div>
+      <label for="cantidadInsumo">Cantidad (kg/l):</label>
+      <input type="number" id="cantidadInsumo" name="cantidadInsumo" step="0.01" required />
+    </div>
+    <div>
+      <label for="fechaInsumo">Fecha de uso:</label>
+      <input type="date" id="fechaInsumo" name="fechaInsumo" required />
+    </div>
+    <button type="submit">Registrar insumo</button>
+  </form>
+
+  <h3>Historial de Insumos Registrados</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Tipo</th>
+        <th>Cantidad</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody id="tablaInsumos"></tbody>
+  </table>
+</section>
+
+  </main>
+
+  <!-- Script principal que contiene la lógica y funciones de la app (usando módulos ES6) -->
+  <script type="module" src="main.js"></script>
+
+  <!-- Script para gestionar el envío de correo con EmailJS -->
+  <script>
+    // Evento que intercepta el envío del formulario de planificación
+    document.getElementById('formPlanificacion').addEventListener('submit', function (e) {
+      e.preventDefault(); // Evita el comportamiento por defecto (recargar página)
+
+      // Envia el formulario usando EmailJS con los IDs configurados
+      emailjs.sendForm('tu_service_id', 'tu_template_id', this)
+        .then(function () {
+          // Si se envía con éxito, muestra mensaje de confirmación
+          const mensaje = document.getElementById('mensajeConfirmacion');
+          mensaje.style.display = 'block';
+          mensaje.textContent = "✅ Correo enviado exitosamente";
+
+          // Oculta el mensaje luego de 4 segundos
+          setTimeout(() => {
+            mensaje.style.display = 'none';
+          }, 4000);
+        }, function (error) {
+          // Si hay error, muestra alerta con el error
+          alert('❌ Error al enviar el correo: ' + JSON.stringify(error));
+        });
+
+      // Aquí podrías agregar lógica para guardar la actividad en base de datos si se desea
+    });
+  </script>
+  <script type="module" src="insumos.js"></script>
+
+</body>
+</html>
